@@ -5,22 +5,31 @@ plugins {
 
 repositories {
     maven { url 'https://maven.fabricmc.net/' }
+    maven { url = 'https://dl.bintray.com/legacy-fabric/Legacy-Fabric-Maven' }
+    mavenLocal()
 }
 
-def minecraftVersion = '1.16.4'
-def yarnBuild = 7
-def loaderVersion = '0.10.8'
-def fabricApiVersion = '0.28.4+1.16'
+def minecraftVersion = '1.8.9'
+def yarnBuild = "1.8.9+build.202011050955"
+def loaderVersion = '0.9.3+build.202009100647'
+def fabricApiVersion = '0.10.0'
 
-group = 'me.lucko'
-version = '0.1-SNAPSHOT'
+minecraft {
+    intermediaryUrl = {
+        return "https://dl.bintray.com/legacy-fabric/Legacy-Fabric-Maven/net/fabricmc/intermediary/" + it + "/intermediary-" + it + "-v2.jar";
+    }
+}
 
 dependencies {
+    implementation "com.google.guava:guava:23.5-jre"
     minecraft "com.mojang:minecraft:${minecraftVersion}"
-    mappings "net.fabricmc:yarn:${minecraftVersion}+build.${yarnBuild}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${loaderVersion}"
-    modImplementation(fabricApi.module('fabric-api-base', fabricApiVersion))
+    mappings "net.fabricmc:yarn:${yarnBuild}:v2"
+    modImplementation ("net.fabricmc:fabric-loader-1.8.9:${loaderVersion}") {
+        exclude module: "guava"
+    }
 }
+group = 'me.lucko'
+version = '0.1-SNAPSHOT'
 
 processResources {
     inputs.property "version", project.version
