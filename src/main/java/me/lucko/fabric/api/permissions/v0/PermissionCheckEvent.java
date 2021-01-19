@@ -25,6 +25,7 @@
 
 package me.lucko.fabric.api.permissions.v0;
 
+import net.fabricmc.fabric.api.command.v1.ServerCommandSource;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.fabric.api.util.TriState;
@@ -47,6 +48,6 @@ public interface PermissionCheckEvent {
         return TriState.DEFAULT;
     });
 
-    @NotNull TriState onPermissionCheck(@NotNull CommandSource source, @NotNull String permission);
+    @NotNull TriState onPermissionCheck(@NotNull ServerCommandSource source, @NotNull String permission);
 
 }

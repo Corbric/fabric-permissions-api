@@ -27,6 +27,7 @@ dependencies {
     modImplementation ("net.fabricmc:fabric-loader-1.8.9:${loaderVersion}") {
         exclude module: "guava"
     }
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}"
 }
 group = 'me.lucko'
 version = '0.1-SNAPSHOT'
