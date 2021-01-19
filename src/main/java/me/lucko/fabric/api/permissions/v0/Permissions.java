@@ -28,7 +28,6 @@ package me.lucko.fabric.api.permissions.v0;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.Entity;
-import net.minecraft.server.command.ServerCommandSource;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -76,7 +75,7 @@ public interface Permissions {
      * @return the result of the permission check
      */
     static boolean check(@NotNull CommandSource source, @NotNull String permission, int defaultRequiredLevel) {
-        return getPermissionValue(source, permission).orElseGet(() -> source.hasPermissionLevel(defaultRequiredLevel));
+        return getPermissionValue(source, permission).orElseGet(() -> source.canUseCommand(defaultRequiredLevel, "op"));
     }
 
     /**
@@ -99,7 +98,7 @@ public interface Permissions {
      * @param defaultValue the default value to use if nothing has been set
      * @return a predicate that will perform the permission check
      */
-    static @NotNull Predicate<ServerCommandSource> require(@NotNull String permission, boolean defaultValue) {
+    static @NotNull Predicate<CommandSource> require(@NotNull String permission, boolean defaultValue) {
         Objects.requireNonNull(permission, "permission");
         return player -> check(player, permission, defaultValue);
     }
@@ -113,7 +112,7 @@ public interface Permissions {
      * @param defaultRequiredLevel the required permission level to check for as a fallback
      * @return a predicate that will perform the permission check
      */
-    static @NotNull Predicate<ServerCommandSource> require(@NotNull String permission, int defaultRequiredLevel) {
+    static @NotNull Predicate<CommandSource> require(@NotNull String permission, int defaultRequiredLevel) {
         Objects.requireNonNull(permission, "permission");
         return player -> check(player, permission, defaultRequiredLevel);
     }
@@ -125,7 +124,7 @@ public interface Permissions {
      * @param permission the permission to check
      * @return a predicate that will perform the permission check
      */
-    static @NotNull Predicate<ServerCommandSource> require(@NotNull String permission) {
+    static @NotNull Predicate<CommandSource> require(@NotNull String permission) {
         Objects.requireNonNull(permission, "permission");
         return player -> check(player, permission);
     }
@@ -139,7 +138,7 @@ public interface Permissions {
      */
     static @NotNull TriState getPermissionValue(@NotNull Entity entity, @NotNull String permission) {
         Objects.requireNonNull(entity, "entity");
-        return getPermissionValue(entity.getCommandSource(), permission);
+        return getPermissionValue(entity, permission);
     }
 
     /**
@@ -153,7 +152,7 @@ public interface Permissions {
      */
     static boolean check(@NotNull Entity entity, @NotNull String permission, boolean defaultValue) {
         Objects.requireNonNull(entity, "entity");
-        return check(entity.getCommandSource(), permission, defaultValue);
+        return check(entity, permission, defaultValue);
     }
 
     /**
@@ -167,7 +166,7 @@ public interface Permissions {
      */
     static boolean check(@NotNull Entity entity, @NotNull String permission, int defaultRequiredLevel) {
         Objects.requireNonNull(entity, "entity");
-        return check(entity.getCommandSource(), permission, defaultRequiredLevel);
+        return check(entity, permission, defaultRequiredLevel);
     }
 
     /**
@@ -180,7 +179,7 @@ public interface Permissions {
      */
     static boolean check(@NotNull Entity entity, @NotNull String permission) {
         Objects.requireNonNull(entity, "entity");
-        return check(entity.getCommandSource(), permission);
+        return check(entity, permission);
     }
 
 }
